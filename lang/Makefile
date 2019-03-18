@@ -1,9 +1,9 @@
-CC=gcc
-CFLAGS=-std=c11
+CC=g++
+CFLAGS=-std=c++17
 LFLAGS=-lm
-TDEPS=token.c
+TDEPS=token.cpp
 TOBJ=token_test.out
-TSRC=token_test.c
+TSRC=token_test.cpp
 ADEPS=arg.c 
 AOBJ=arg_test.out
 ASRC=arg_test.c
