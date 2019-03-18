@@ -1,6 +1,6 @@
-#include <stdbool.h>
-#include <stdio.h>
-#include <assert.h>
+#include <cstdio>
+#include <cassert>
+#include <string>
 #include "token.h"
 
 #define ASSERT(condition) if(!(condition)) { \
@@ -11,117 +11,117 @@
 
 void test_create_token_valid() {
     // Given: You have created a Token with a validly formatted number
-    Token number_token = create_token("125.6");
+    Token number_token = Token("125.6");
 
     // When: You check its type
-    TokenType type = get_type(number_token);
+    TokenType type = number_token.get_type();
     // Then: The type of the token should be NUMBER
-    ASSERT(type == NUMBER);
+    ASSERT(type == TokenType::NUMBER);
     SUCCESS();
 }
 
 void test_create_token_invalid() {
     // Given: You have created a Token with an invalidly formatted number
-    Token invalid_token = create_token("125.6.7");
+    Token invalid_token = Token("125.6.7");
 
     // When: You check its type
-    TokenType type = get_type(invalid_token);
+    TokenType type = invalid_token.get_type();
 
     // Then: The type of the token should be OTHER
-    ASSERT(type == OTHER);
+    ASSERT(type == TokenType::OTHER);
     SUCCESS();
 }
 
 void test_create_token_invalid_alpha() {
     // Given: You have created a Token that has alphabetical characters
-    Token invalid_token = create_token("152.3f");
+    Token invalid_token = Token("152.3f");
 
     // When: You check its type
-    TokenType type = get_type(invalid_token);
+    TokenType type = invalid_token.get_type();
 
     // Then: The type of the token should be OTHER
-    ASSERT(type == OTHER);
+    ASSERT(type == TokenType::OTHER);
     SUCCESS();
 }
 
 void test_create_token_to() {
     // Given: You have created a Token that has the contents "to"
-    Token to_token = create_token("to");
+    Token to_token = Token("to");
 
     // When: You check its type
-    TokenType type = get_type(to_token);
+    TokenType type = to_token.get_type();
 
     // Then: The type of the token should be TO
-    ASSERT(type == TO);
+    ASSERT(type == TokenType::TO);
     SUCCESS();
 }
 
 void test_create_token_end() {
     // Given: You have created a Token that has the contents "end"
-    Token end_token = create_token("end");
+    Token end_token = Token("end");
 
     // When: You check its type
-    TokenType type = get_type(end_token);
+    TokenType type = end_token.get_type();
 
     // Then: The type of the token should be END
-    ASSERT(type == END);
+    ASSERT(type == TokenType::END);
     SUCCESS();
 }
 
 void test_create_token_sb() {
     // Given: You have created Tokens that have square brackets
-    Token open_token = create_token("[");
-    Token closed_token = create_token("]");
+    Token open_token = Token("[");
+    Token closed_token = Token("]");
 
     // When: You check their types
-    TokenType open_type = get_type(open_token);
-    TokenType closed_type = get_type(closed_token);
+    TokenType open_type = open_token.get_type();
+    TokenType closed_type = closed_token.get_type();
 
     // Then: Their types should have the correct values
-    ASSERT(open_type == OPEN_SQUARE);
-    ASSERT(closed_type == CLOSED_SQUARE);
+    ASSERT(open_type == TokenType::OPEN_SQUARE);
+    ASSERT(closed_type == TokenType::CLOSED_SQUARE);
     SUCCESS();
 }
 
 void test_create_token_param() {
     // Given: You have created a Token that holds a paremeter
-    Token param_token = create_token(":length");
+    Token param_token = Token(":length");
 
     // When: You check its type
-    TokenType type = get_type(param_token);
+    TokenType type = param_token.get_type();
 
     // Then: Its type should be PARAMETER
-    ASSERT(type == PARAMETER);
+    ASSERT(type == TokenType::PARAMETER);
     SUCCESS();
 }
 
 void test_create_token_repeat() {
     // Given: You have created Tokens that contain "repeat" and "repcount"
-    Token repeat_token = create_token("repeat");
-    Token repcnt_token = create_token("repcount");
+    Token repeat_token = Token("repeat");
+    Token repcnt_token = Token("repcount");
 
     // When: You check their types
-    TokenType repeat_type = get_type(repeat_token);
-    TokenType repcnt_type = get_type(repcnt_token);
+    TokenType repeat_type = repeat_token.get_type();
+    TokenType repcnt_type = repcnt_token.get_type();
 
     // Then: They should have the correct types
-    ASSERT(repeat_type == REPEAT);
-    ASSERT(repcnt_type == REPCOUNT);
+    ASSERT(repeat_type == TokenType::REPEAT);
+    ASSERT(repcnt_type == TokenType::REPCOUNT);
     SUCCESS();
 }
 
 void test_create_token_stop_output() {
     // Given: You have created Tokens that contain "stop" and "output"
-    Token stop_token = create_token("stop");
-    Token output_token = create_token("output");
+    Token stop_token = Token("stop");
+    Token output_token = Token("output");
 
     // When: You check their types
-    TokenType stop_type = get_type(stop_token);
-    TokenType output_type = get_type(output_token);
+    TokenType stop_type = stop_token.get_type();
+    TokenType output_type = output_token.get_type();
 
     // Then: They should have the correct types
-    ASSERT(stop_type == STOP);
-    ASSERT(output_type == OUTPUT);
+    ASSERT(stop_type == TokenType::STOP);
+    ASSERT(output_type == TokenType::OUTPUT);
     SUCCESS();
 }
 

@@ -1,9 +1,9 @@
 #ifndef TOKEN_H_
 #define TOKEN_H_
+#include <string>
 
-typedef struct Token *Token;
-
-typedef enum TokenType {
+enum class TokenType
+{
     TO,
     END,
     OPEN_SQUARE,
@@ -19,11 +19,21 @@ typedef enum TokenType {
     OUTPUT,
     OTHER
 
-} TokenType;
+};
 
-extern Token create_token(const char *contents);
-extern void destroy_token(Token t);
-extern TokenType get_type(Token t);
-extern const char *get_contents(Token t);
+class Token
+{
+    public:
+
+        Token();
+        Token(std::string contents);
+        TokenType get_type() const;
+        const char *get_contents() const;
+    
+    private:
+
+        std::string contents;
+        TokenType type;
+};
 
 #endif
