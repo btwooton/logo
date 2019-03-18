@@ -1,7 +1,7 @@
 #include <cstdio>
 #include <cassert>
 #include <string>
-#include "token.h"
+#include "token.hpp"
 
 #define ASSERT(condition) if(!(condition)) { \
     printf("Assertion failed at line %d in test %s\n", __LINE__, __func__); \

@@ -19,8 +19,8 @@ PDEPS=parser.c ast_node.c token.c tokenizer.c \
 	  arg.c args.c dispatch_table.c procedure.c
 PSRC=parser_test.c
 POBJ=parser_test.out
-TZDEPS=tokenizer.c token.c
-TZSRC=tokenizer_test.c
+TZDEPS=tokenizer.cpp token.cpp
+TZSRC=tokenizer_test.cpp
 TZOBJ=tokenizer_test.out
 
 arg_test:

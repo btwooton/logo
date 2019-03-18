@@ -1,10 +1,7 @@
 #ifndef AST_NODE_H_
 #define AST_NODE_H_
-#include <stdbool.h>
 
-typedef struct AstNode *AstNode;
-
-typedef enum NodeType {
+enum class NodeType {
     AST_UNIT,
     AST_NUMBER,
     AST_BOOLEAN,
@@ -19,7 +16,15 @@ typedef enum NodeType {
     AST_REPCOUNT,
     AST_BRACKETED
 
-} NodeType;
+};
+
+class AstNode {
+    public:
+
+    private:
+        NodeType type;
+        
+}
 
 extern AstNode create_number_node(double value);
 extern AstNode create_funcall_node(const char *name, int arity);

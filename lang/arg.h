@@ -1,14 +1,13 @@
 #ifndef ARG_H_
 #define ARG_H_
 #include "ast_node.h"
-#include <stdbool.h>
 
-typedef enum ArgType {
+enum class ArgType {
     ARG_NUMBER,
     ARG_STRING,
     ARG_BOOLEAN,
     ARG_UNIT,
-} ArgType;
+};
 
 typedef struct Arg *Arg;
 

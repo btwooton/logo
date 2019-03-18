@@ -2,8 +2,7 @@
 #define TOKEN_H_
 #include <string>
 
-enum class TokenType
-{
+enum class TokenType {
     TO,
     END,
     OPEN_SQUARE,
@@ -21,14 +20,14 @@ enum class TokenType
 
 };
 
-class Token
-{
+class Token {
     public:
 
         Token();
         Token(std::string contents);
         TokenType get_type() const;
         const char *get_contents() const;
+        bool operator==(const Token& other) const;
     
     private:
 

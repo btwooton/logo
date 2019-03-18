@@ -2,7 +2,7 @@
 #include <cctype>
 #include <cstring>
 #include <string>
-#include "token.h"
+#include "token.hpp"
 
 static bool is_numeric(const char *string) {
     int point_count = 0;
@@ -64,4 +64,8 @@ TokenType Token::get_type() const {
 
 const char* Token::get_contents() const {
     return contents.c_str();
+}
+
+bool Token::operator==(const Token& other) const {
+    return this->contents == other.contents;
 }
