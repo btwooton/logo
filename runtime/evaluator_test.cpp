@@ -1,13 +1,12 @@
-#include <assert.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include "../lang/procedure.h"
-#include "../turtle/turtle.h"
-#include "../init/init_dispatch.h"
-#include "../init/init_turtle.h"
-#include "../lang/parser.h"
-#include "evaluator.h"
+#include <cassert>
+#include <cstdio>
+#include <cstdbool>
+#include "../lang/procedure.hpp"
+#include "../turtle/turtle.hpp"
+#include "../init/init_dispatch.hpp"
+#include "../init/init_turtle.hpp"
+#include "../lang/parser.hpp"
+#include "evaluator.hpp"
 
 #define ASSERT(condition) if(!(condition)) { \
     printf("Assertion failed at line %d in test %s\n", __LINE__, __func__); \
@@ -20,11 +19,11 @@ void test_evaluate_literal() {
     const char *bool_expr = "true";
     const char *num_expr = "5.7";
 
-    Tokenizer tok = create_tokenizer();
-    tokenize(tok, bool_expr);
+    Tokenizer tok = Tokenizer();
+    tok.tokenize(bool_expr);
     AstNode n1 = parse_expression(tok);
 
-    tokenize(tok, num_expr);
+    tok.tokenize(num_expr);
     AstNode n2 = parse_expression(tok);
 
     // When: You evaluate the respective ASTs
@@ -32,11 +31,9 @@ void test_evaluate_literal() {
     AstNode e2 = evaluate(n2);
 
     // Then: You should get the literal values back as results
-    ASSERT(get_ast_bool_value(e1) == get_ast_bool_value(n1));
-    ASSERT(get_ast_number_value(e2) == get_ast_number_value(n2));
-    destroy_astnode(n1);
-    destroy_astnode(n2);
-    destroy_tokenizer(tok);
+    ASSERT(e1.get_value<bool>() == n1.get_value<bool>());
+    ASSERT(e2.get_value<double>() == n2.get_value<double>());
+
     SUCCESS();
 }
 
@@ -47,8 +44,8 @@ void test_evaluate_funcall() {
 
     const char *arith_expr = "1 + 2 * 3";
     
-    Tokenizer tok = create_tokenizer();
-    tokenize(tok, arith_expr);
+    Tokenizer tok = Tokenizer();
+    tok.tokenize(arith_expr);
 
     AstNode root = parse_expression(tok);
 
@@ -56,11 +53,9 @@ void test_evaluate_funcall() {
     AstNode result = evaluate(root);
 
     // Then: The type of the AstNode that you get the result of the funcall back
-    ASSERT(get_ast_type(result) == AST_NUMBER);
-    ASSERT(get_ast_number_value(result) == 7);
-    destroy_astnode(result);
-    destroy_astnode(root);
-    destroy_tokenizer(tok);
+    ASSERT(result.get_type() == NodeType::AST_NUMBER);
+    ASSERT(result.get_value<double>() == 7);
+
     SUCCESS();
 }
 
