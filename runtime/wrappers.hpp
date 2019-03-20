@@ -1,6 +1,6 @@
 #ifndef WRAPPERS_H_
 #define WRAPPERS_H_
-#include "../lang/args.h"
+#include "../lang/args.hpp"
 
 extern Args (*wforward)(Args a);
 extern Args (*wbackward)(Args a);
