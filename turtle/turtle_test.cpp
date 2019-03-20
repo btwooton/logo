@@ -1,6 +1,7 @@
-#include <assert.h>
-#include <stdio.h>
-#include "turtle.h"
+#include <cassert>
+#include <cstdio>
+#include <cmath>
+#include "turtle.hpp"
 
 #define ASSERT(condition) if(!(condition)) { \
     printf("Assertion failed at line %d in file %s\n", __LINE__, __FILE__); \
@@ -11,15 +12,14 @@
 void test_turtle_create() {
 
     // Given: You have created a turtle with the following attributes
-    Turtle t = create_turtle(50, 50, 180, true);
+    Turtle t = Turtle(50.0, 50.0, 180, true);
 
     // Then: The created turtle object should have the specified attributes
 
-    ASSERT(t);
-    ASSERT(getx(t) == 50);
-    ASSERT(gety(t) == 50);
-    ASSERT(get_heading(t) == 180);
-    ASSERT(isdown(t));
+    ASSERT(t.get_x() == 50.0);
+    ASSERT(t.get_y() == 50.0);
+    ASSERT(t.get_heading() == 180);
+    ASSERT(t.isdown());
 
     SUCCESS();
 
@@ -28,13 +28,13 @@ void test_turtle_create() {
 void test_turtle_right() {
     
     // Given: You have created a turtle with the following attributes
-    Turtle t = create_turtle(50, 50, 22, true);
+    Turtle t = Turtle(50.0, 50.0, 22, true);
 
     // When: You move the turtle right by 45 degrees
-    right(t, 45);
+    t.right(45);
     
     // Then: The turtle's heading should be 337 degrees
-    ASSERT(get_heading(t) == 337);
+    ASSERT(t.get_heading() == 337);
 
     SUCCESS();  
 
@@ -43,13 +43,13 @@ void test_turtle_right() {
 void test_turtle_left() {
     
     // Given: You have created a turtle with the following attributes
-    Turtle t = create_turtle(50, 50, 22, true);
+    Turtle t = Turtle(50, 50, 22, true);
 
     // When: You move the turtle left by 45 degrees
-    left(t, 45);
+    t.left(45);
 
     // Then: The turtle's heading should be 67 degrees
-    ASSERT(get_heading(t) == 67);
+    ASSERT(t.get_heading() == 67);
 
     SUCCESS();
 
@@ -57,16 +57,17 @@ void test_turtle_left() {
 void test_turtle_forward() {
     
     // Given: You have created a turtle with the following attributes
-    Turtle t = create_turtle(50, 50, 180, true);
+    Turtle t = Turtle(50, 50, 180, true);
 
     // When: You move the turtle forward by 50
-    forward(t, 50);
+    t.forward(50);
+
 
     // Then: The turtle's x position should be 0
-    ASSERT(getx(t) == 0);
+    ASSERT(floor(t.get_x()) == 0);
     
     // Then: The turtle's y position should be 50
-    ASSERT(gety(t) == 50);
+    ASSERT(floor(t.get_y()) == 50.0);
 
     SUCCESS();
 
@@ -75,16 +76,16 @@ void test_turtle_forward() {
 void test_turtle_backward() {
 
     // Given: You have created a turtle with the following attributes
-    Turtle t = create_turtle(50, 50, 90, true);
+    Turtle t = Turtle(50, 50, 90, true);
 
     // When: You move the turtle backward by 25
-    backward(t, 25);
-    
+    t.backward(25);
+
     // Then: The turtle's x position should be 50
-    ASSERT(getx(t) == 50);
+    ASSERT(ceil(t.get_x()) == 50.0);
 
     // Then: The turtle's y position should be 75
-    ASSERT(gety(t) == 25);
+    ASSERT(floor(t.get_y()) == 25.0);
 
     SUCCESS();
 

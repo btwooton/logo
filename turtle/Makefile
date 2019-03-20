@@ -1,8 +1,8 @@
-CC=gcc
+CC=g++
 LFLAGS=-lm
-CFLAGS=-std=c11
-SRC=turtle_test.c
-DEPS=turtle.c
+CFLAGS=-std=c++17
+SRC=turtle_test.cpp
+DEPS=turtle.cpp
 OBJS=turtle_test.out
 
 turtle_test:
