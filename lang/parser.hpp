@@ -14,6 +14,7 @@ extern AstNode parse_funcall(Tokenizer& tok);
 extern AstNode parse_fundef(Tokenizer& tok);
 extern AstNode parse_parameter(Tokenizer& tok);
 extern AstNode parse_if(Tokenizer& tok);
+extern AstNode parse_ifelse(Tokenizer& tok);
 extern AstNode parse_output(Tokenizer& tok);
 extern AstNode parse_stop(Tokenizer& tok);
 extern AstNode parse_repcount(Tokenizer& tok);

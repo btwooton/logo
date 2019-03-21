@@ -12,6 +12,7 @@ class Tokenizer {
         Token get_next();
         Token peek_next();
         bool has_next() const;
+        friend std::ostream& operator<<(std::ostream& out, const Tokenizer& tok);
 
     private:
         std::vector<Token> tokens;

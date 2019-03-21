@@ -1,6 +1,7 @@
 #ifndef TOKEN_H_
 #define TOKEN_H_
 #include <string>
+#include <iostream>
 
 enum class TokenType {
     TO,
@@ -15,6 +16,7 @@ enum class TokenType {
     REPEAT,
     REPCOUNT,
     IF,
+    IFELSE,
     OUTPUT,
     OTHER
 
@@ -28,6 +30,7 @@ class Token {
         TokenType get_type() const;
         const char *get_contents() const;
         bool operator==(const Token& other) const;
+        bool operator!=(const Token& other) const;
     
     private:
 

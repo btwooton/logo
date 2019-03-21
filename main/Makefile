@@ -1,11 +1,13 @@
-CC=gcc
-SRC=main.c
-DEPS='../turtle/turtle.c' '../rendering/render_turtle.c' '../init/init_allegro.c' \
-	 '../init/init_turtle.c' '../lang/args.c' '../lang/arg.c' '../runtime/wrappers.c' \
-	 '../lang/procedure.c' '../lang/dispatch_table.c' '../init/init_dispatch.c'
+CC=g++
+SRC=main.cpp
+DEPS='../turtle/turtle.cpp' '../rendering/render_turtle.cpp' '../init/init_allegro.cpp' \
+	 '../init/init_turtle.cpp' '../lang/args.cpp' '../lang/arg.cpp' '../runtime/wrappers.cpp' \
+	 '../lang/procedure.cpp' '../lang/dispatch_table.cpp' '../init/init_dispatch.cpp' \
+	 '../runtime/evaluator.cpp' '../lang/ast_node.cpp' '../lang/parser.cpp' \
+	 '../lang/tokenizer.cpp' '../lang/token.cpp'
 OBJS=main.out
-LFLAGS=-lm -lallegro -lallegro_primitives
-CFLAGS=-std=c11
+LFLAGS=-lm -lallegro -lallegro_primitives -lallegro_main
+CFLAGS=-std=c++17
 
 main:
 		$(CC) $(CFLAGS) $(SRC) $(DEPS) $(LFLAGS) -o $(OBJS)

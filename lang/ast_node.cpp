@@ -1,18 +1,26 @@
 #include <cassert>
+#include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <string>
 #include <vector>
+#include <functional>
+#include <iostream>
 #include "ast_node.hpp"
 
 
+AstNode::AstNode() {
+    this->type = NodeType::AST_UNIT;
+    new (&string) std::string("()");
+}
+
 AstNode::AstNode(double other) {
-    type = NodeType::AST_NUMBER;
+    this->type = NodeType::AST_NUMBER;
     new (&number) double(other);
 }
 
 AstNode::AstNode(bool other) {
-    type = NodeType::AST_BOOLEAN;
+    this->type = NodeType::AST_BOOLEAN;
     new (&boolean) bool(other);
 }
 
@@ -20,34 +28,57 @@ AstNode::AstNode(const char *contents) {
     new (&string) std::string(contents);
 
     if (contents[0] == ':') {
-        type = NodeType::AST_PARAMETER;
+        this->type = NodeType::AST_PARAMETER;
     } else if (contents[0] == '"' || contents[0] == '\'') {
-        type = NodeType::AST_STRING;
+        this->type = NodeType::AST_STRING;
     } else if (strcmp(contents, "repeat") == 0) {
-        type = NodeType::AST_REPEAT;
+        this->type = NodeType::AST_REPEAT;
     } else if (strcmp(contents, "if") == 0) {
-        type = NodeType::AST_IF;
+        this->type = NodeType::AST_IF;
+    } else if (strcmp(contents, "ifelse") == 0) {
+        this->type = NodeType::AST_IFELSE;
     } else if (strcmp(contents, "output") == 0) {
-        type = NodeType::AST_OUTPUT;
+        this->type = NodeType::AST_OUTPUT;
     } else if (strcmp(contents, "stop") == 0) {
-        type = NodeType::AST_STOP;
-    } else if (strcmp(contents, "repcount") == 0) {
-        type = NodeType::AST_REPCOUNT;
+        this->type = NodeType::AST_STOP;
     } else if (strcmp(contents, "()") == 0) {
-        type = NodeType::AST_UNIT;
+        this->type = NodeType::AST_UNIT;
     } else {
-        type = NodeType::AST_IDENTIFIER;
+        this->type = NodeType::AST_IDENTIFIER;
     }
 
 }
 
 AstNode::AstNode(const char *contents, NodeType type) {
-    type = type;
+    this->type = type;
     new (&string) std::string(contents);
 }
 
-AstNode::AstNode(const AstNode& other) {
-    type = other.type;
+AstNode::AstNode(NodeType type) {
+    this->type = type;
+
+    switch (type) {
+        case NodeType::AST_REPCOUNT:
+            new (&number) double(0);
+            break;
+        case NodeType::AST_BOOLEAN:
+            new (&boolean) bool(false);
+            break;
+        case NodeType::AST_NUMBER:
+            new (&number) double(0);
+            break;
+        case NodeType::AST_BRACKETED:
+            new (&string) std::string("bracketed");
+            break;
+        default:
+            new (&string) std::string("INVALID");
+            break;
+    }
+}
+
+AstNode::AstNode(const AstNode& other) : type(other.type) {
+
+    children = other.children;
 
     switch (type) {
         case NodeType::AST_NUMBER:
@@ -58,6 +89,23 @@ AstNode::AstNode(const AstNode& other) {
             break;
         default:
             new (&string) std::string(other.string);
+            break;
+    }
+}
+
+AstNode::AstNode(AstNode&& other) {
+    this->type = other.type;
+    this->children = std::move(other.children);
+
+    switch (type) {
+        case NodeType::AST_NUMBER:
+            new (&number) double(std::move(other.number));
+            break;
+        case NodeType::AST_BOOLEAN:
+            new (&boolean) bool(std::move(other.boolean));
+            break;
+        default:
+            new (&string) std::string(std::move(other.string));
             break;
     }
 }
@@ -79,7 +127,10 @@ NodeType AstNode::get_type() const {
 }
 
 template <> double AstNode::get_value() const {
-    assert(type == NodeType::AST_NUMBER);
+    assert(
+        type == NodeType::AST_NUMBER ||
+        type == NodeType::AST_REPCOUNT
+    );
     return number;
 }
 
@@ -89,8 +140,31 @@ template <> bool AstNode::get_value() const {
 }
 
 template <> const char *AstNode::get_value() const {
-    assert(type != NodeType::AST_NUMBER && type != NodeType::AST_BOOLEAN);
+    assert(
+        type != NodeType::AST_NUMBER &&
+        type != NodeType::AST_BOOLEAN &&
+        type != NodeType::AST_REPCOUNT
+    );
     return string.c_str();
+}
+
+template <> void AstNode::set_value(double new_value) {
+    assert(type == NodeType::AST_NUMBER || type == NodeType::AST_REPCOUNT);
+    number = new_value;
+}
+
+template <> void AstNode::set_value(bool new_value) {
+    assert(type == NodeType::AST_BOOLEAN);
+    boolean = new_value;
+}
+
+template <> void AstNode::set_value(const char *new_value) {
+    assert(
+        type != NodeType::AST_BOOLEAN && 
+        type != NodeType::AST_NUMBER &&
+        type != NodeType::AST_REPCOUNT
+    );
+    string = std::string(new_value);
 }
 
 void AstNode::add_child(AstNode child) {
@@ -114,11 +188,13 @@ unsigned int AstNode::get_num_children() const {
 }
 
 AstNode& AstNode::operator=(const AstNode& other) {
+
     if (&other == this) {
         return *this;
     }
 
     this->type = other.type;
+
     this->children = other.children;
 
     switch (this->type) {
@@ -133,4 +209,86 @@ AstNode& AstNode::operator=(const AstNode& other) {
             break;
     }
     return *this;
+}
+
+AstNode& AstNode::operator=(AstNode&& other) {
+    this->type = other.type;
+
+    this->children = std::move(other.children);
+
+    switch (this->type) {
+        case NodeType::AST_NUMBER:
+            this->number = std::move(other.number);
+            break;
+        case NodeType::AST_BOOLEAN:
+            this->boolean = std::move(other.boolean);
+            break;
+        default:
+            this->string = std::move(other.string);
+            break;
+    }
+
+    return *this;
+}
+
+bool AstNode::operator==(const AstNode& other) const {
+    if (other.type != this->type) {
+        return false;
+    }
+
+    switch (this->type) {
+        case NodeType::AST_BOOLEAN:
+            return this->boolean == other.boolean;
+            break;
+        case NodeType::AST_NUMBER:
+            return this->number == other.number;
+            break;
+        default:
+            return this->string == other.string;
+            break;
+    }
+
+    return false;
+}
+
+bool AstNode::operator!=(const AstNode& other) const {
+    return !this->operator==(other);
+}
+
+std::ostream& operator<<(std::ostream& out, const AstNode& node) {
+    switch (node.type) {
+        case NodeType::AST_NUMBER:
+            out << node.get_value<double>() << "\n\t";
+            break;
+        case NodeType::AST_BOOLEAN:
+            out << node.get_value<bool>() << "\n\t";
+            break;
+        default:
+            out << node.get_value<const char *>() << "\n\t";
+    }
+    for (int i = 0; i < node.children.size(); i++) {
+        operator<<(out, node.children[i]);
+    }
+    return out;
+}
+
+void AstNode::set_children(std::vector<AstNode> new_children) {
+    this->children = new_children;
+}
+
+std::vector<AstNode>& AstNode::get_children() {
+    return children;
+}
+
+std::size_t NodeHasher::operator()(const AstNode& key) const {
+    switch (key.get_type()) {
+        case NodeType::AST_NUMBER:
+            return std::hash<double>()(key.get_value<double>());
+        case NodeType::AST_BOOLEAN:
+            return std::hash<bool>()(key.get_value<bool>());
+        default:
+            return std::hash<std::string>()(
+                std::string(key.get_value<const char *>())
+            );
+    }
 }

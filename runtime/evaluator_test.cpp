@@ -52,10 +52,80 @@ void test_evaluate_funcall() {
     // When: You evaluate the respective AST
     AstNode result = evaluate(root);
 
-    // Then: The type of the AstNode that you get the result of the funcall back
+    // Then: You get an AstNode back containing the result of the function call
     ASSERT(result.get_type() == NodeType::AST_NUMBER);
     ASSERT(result.get_value<double>() == 7);
 
+    SUCCESS();
+}
+
+void test_evaluate_repeat() {
+    // Given: You have parsed the following repeat expression into an AST
+    init_turtle(500, 500, 90, true);
+    init_dispatch_table();
+
+    const char *repeat_expr = "repeat 4 [ repcount + 5 ]";
+
+    Tokenizer tok = Tokenizer();
+    tok.tokenize(repeat_expr);
+
+    AstNode root = parse_expression(tok);
+
+    // When: You evaluate the respective AST
+    AstNode result = evaluate(root);
+
+    // Then: The type of the AstNode that you get back is a AST_NUMBER
+    ASSERT(result.get_type() == NodeType::AST_NUMBER);
+
+    // Then: The value of the AstNode that you get back is 9
+    ASSERT(result.get_value<double>() == 9.0);
+
+    SUCCESS();
+}
+
+void test_evaluate_ifelse() {
+    // Given: You have parse the following ifelse expression
+    init_turtle(500, 500, 90, true);
+    init_dispatch_table();
+
+    const char *ifelse_expr = "ifelse 5 < 10 [ 5 * 20 ] [ 20 - 5 ]";
+
+    Tokenizer tok = Tokenizer();
+    tok.tokenize(ifelse_expr);
+
+    AstNode root = parse_expression(tok);
+
+    // When: You evaluate the resulting AST
+    AstNode result = evaluate(root);
+
+    // Then: The type of the AstNode that you get back is an AST_NUMBER
+    ASSERT(result.get_type() == NodeType::AST_NUMBER);
+
+    // Then: The value of the AstNode that you get back is 100
+    ASSERT(result.get_value<double>() == 100.0);
+    SUCCESS();
+}
+
+void test_evaluate_ifelse_falsecond() {
+    // Given: You have parse the following ifelse expression
+    init_turtle(500, 500, 90, true);
+    init_dispatch_table();
+
+    const char *ifelse_expr = "ifelse 5 > 10 [ 5 * 20 ] [ 20 - 5 ]";
+
+    Tokenizer tok = Tokenizer();
+    tok.tokenize(ifelse_expr);
+
+    AstNode root = parse_expression(tok);
+
+    // When: You evaluate the resulting AST
+    AstNode result = evaluate(root);
+
+    // Then: The type of the AstNode that you get back is an AST_NUMBER
+    ASSERT(result.get_type() == NodeType::AST_NUMBER);
+
+    // Then: The value of the AstNode that you get back is 15
+    ASSERT(result.get_value<double>() == 15.0);
     SUCCESS();
 }
 
@@ -63,5 +133,8 @@ int main(int argc, char *argv[]) {
 
     test_evaluate_literal();
     test_evaluate_funcall();
+    test_evaluate_repeat();
+    test_evaluate_ifelse();
+    test_evaluate_ifelse_falsecond();
     return 0;
 }

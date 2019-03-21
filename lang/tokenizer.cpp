@@ -4,6 +4,7 @@
 #include <cstring>
 #include <vector>
 #include <string>
+#include <iostream>
 #include "token.hpp"
 #include "tokenizer.hpp"
 
@@ -16,6 +17,9 @@ Tokenizer::Tokenizer() {
 }
         
 void Tokenizer::tokenize(const char *string) {
+    tokens.clear();
+    current_token = 0;
+    num_tokens = 0;
     char *copy_string = (char *)malloc(sizeof(char) * (strlen(string) + 1));
     strcpy(copy_string, string);
     const char *delim = " \t\n\f\r";
@@ -57,4 +61,12 @@ Token Tokenizer::peek_next() {
 
 bool Tokenizer::has_next() const {
     return current_token < num_tokens;
+}
+
+std::ostream& operator<<(std::ostream& out, const Tokenizer& tok) {
+    for (int i = 0; i < tok.tokens.size(); i++) {
+        out << tok.tokens[i].get_contents() << " ";
+    }
+    out << "\n";
+    return out;
 }

@@ -25,12 +25,14 @@ AstNode parse_expression(Tokenizer& tok) {
         return parse_fundef(tok);
     } else if (t.get_type() == TokenType::IF) {
         return parse_if(tok);
+    } else if (t.get_type() == TokenType::IFELSE) {
+        return parse_ifelse(tok);
     } else if (t.get_type() == TokenType::OUTPUT) {
         return parse_output(tok);
     } else if (t.get_type() == TokenType::STOP) {
         return parse_stop(tok);
     } else if (t.get_type() == TokenType::REPCOUNT) {
-        return parse_stop(tok);
+        return parse_repcount(tok);
     } else {
         return parse_identifier(tok);
     }
@@ -169,6 +171,21 @@ AstNode parse_if(Tokenizer& tok) {
     return if_node;
 }
 
+AstNode parse_ifelse(Tokenizer& tok) {
+    Token ifelse_token = tok.get_next();
+    AstNode ifelse_node = AstNode(ifelse_token.get_contents());
+
+    AstNode conditional = parse_expression(tok);
+    AstNode bracketed1 = parse_expression(tok);
+    AstNode bracketed2 = parse_expression(tok);
+
+    ifelse_node.add_child(conditional);
+    ifelse_node.add_child(bracketed1);
+    ifelse_node.add_child(bracketed2);
+
+    return ifelse_node;
+}
+
 AstNode parse_output(Tokenizer& tok) {
     Token output_token = tok.get_next();
     assert(output_token.get_type() == TokenType::OUTPUT);
@@ -193,6 +210,6 @@ AstNode parse_repcount(Tokenizer& tok) {
     Token repcount_token = tok.get_next();
     assert(repcount_token.get_type() == TokenType::REPCOUNT);
 
-    AstNode repcount_node = AstNode(repcount_token.get_contents());
+    AstNode repcount_node = AstNode(NodeType::AST_REPCOUNT);
     return repcount_node;
 }

@@ -49,6 +49,8 @@ Token::Token(std::string contents) : contents(contents) {
         type = TokenType::CLOSED_SQUARE;
     } else if (strcmp(ccontents, "if") == 0) {
         type = TokenType::IF;
+    } else if (strcmp(ccontents, "ifelse") == 0) {
+        type = TokenType::IFELSE;
     } else if (ccontents[0] == ':') {
         type = TokenType::PARAMETER;
     } else {
@@ -68,4 +70,8 @@ const char* Token::get_contents() const {
 
 bool Token::operator==(const Token& other) const {
     return this->contents == other.contents;
+}
+
+bool Token::operator!=(const Token& other) const {
+    return this->contents != other.contents;
 }

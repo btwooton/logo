@@ -10,6 +10,7 @@ class Turtle {
 
     public:
 
+        Turtle();
         Turtle(double x, double y, int heading, bool pd);
 
         double get_x() const;

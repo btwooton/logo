@@ -1,6 +1,12 @@
 #include <cmath>
 #include "turtle.hpp"
 
+Turtle::Turtle() {
+    this->x = 0.0;
+    this->y = 0.0;
+    this->heading = 0;
+    this->pd = false;
+}
 
 Turtle::Turtle(double x, double y, int heading, bool pd) {
     this->x = x;
@@ -34,15 +40,15 @@ void Turtle::set_heading(int heading) {
 }
 
 void Turtle::forward(double amt) {
-    double new_x = x + cos(heading*PI/180) * amt;
-    double new_y = y + sin(heading*PI/180) * amt;
+    double new_x = x + cos((double)heading*PI/180.0) * amt;
+    double new_y = y + sin((double)heading*PI/180.0) * amt;
     x = new_x;
     y = new_y;
 }
 
 void Turtle::backward(double amt) {
-    double new_x = x - cos(heading*PI/180) * amt;
-    double new_y = y - sin(heading*PI/180) * amt;
+    double new_x = x - cos((double)heading*PI/180.0) * amt;
+    double new_y = y - sin((double)heading*PI/180.0) * amt;
     x = new_x;
     y = new_y;
 }

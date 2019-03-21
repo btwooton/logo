@@ -6,9 +6,16 @@
 #include "../init/init_turtle.hpp"
 #include "../lang/args.hpp"
 #include "../lang/arg.hpp"
+#include "../rendering/render_turtle.hpp"
 
 Args wforward_impl(Args a) {
   Arg amount = a.get_arg(0);
+  if (__turtle__.isdown()) {
+      rendered_forward(__turtle__, amount.get_value<double>());
+      Args result = Args();
+      result.add_arg(Arg(ArgType::ARG_UNIT));
+      return result;
+  }
   __turtle__.forward(amount.get_value<double>()); 
   Args result = Args();
   result.add_arg(Arg(ArgType::ARG_UNIT));
@@ -17,6 +24,12 @@ Args wforward_impl(Args a) {
 
 Args wbackward_impl(Args a) {
    Arg amount = a.get_arg(0);
+   if (__turtle__.isdown()) {
+      rendered_backward(__turtle__, amount.get_value<double>());
+      Args result = Args();
+      result.add_arg(Arg(ArgType::ARG_UNIT));
+      return result;
+  }
    __turtle__.backward(amount.get_value<double>());
    Args result = Args();
    result.add_arg(Arg(ArgType::ARG_UNIT));

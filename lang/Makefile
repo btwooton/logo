@@ -1,23 +1,29 @@
 CC=g++
 CFLAGS=-std=c++17
-LFLAGS=-lm
+LFLAGS=-lm -lallegro -lallegro_primitives
 TDEPS=token.cpp
 TOBJ=token_test.out
 TSRC=token_test.cpp
-ADEPS=arg.c 
+ADEPS=arg.cpp ast_node.cpp
 AOBJ=arg_test.out
-ASRC=arg_test.c
-ASDEPS=arg.c args.c ast_node.c
+ASRC=arg_test.cpp
+ASDEPS=arg.cpp args.cpp ast_node.cpp
 ASOBJ=args_test.out
-ASSRC=args_test.c
-DTDEPS=procedure.c dispatch_table.c args.c arg.c
+ASSRC=args_test.cpp
+ASTDEPS=ast_node.cpp
+ASTOBJ=ast_node_test.out
+ASTSRC=ast_node_test.cpp
+DTDEPS=procedure.cpp dispatch_table.cpp args.cpp arg.cpp \
+       '../runtime/evaluator.cpp' ast_node.cpp '../init/init_dispatch.cpp' \
+	   '../runtime/wrappers.cpp' '../turtle/turtle.cpp' \
+	   '../init/init_turtle.cpp'
 DTOBJ=dispatch_table_test.out
-DTSRC=dispatch_table_test.c
-PDEPS=parser.c ast_node.c token.c tokenizer.c \
-	  '../init/init_dispatch.c' '../runtime/wrappers.c' \
-	  '../init/init_turtle.c' '../turtle/turtle.c' \
-	  arg.c args.c dispatch_table.c procedure.c
-PSRC=parser_test.c
+DTSRC=dispatch_table_test.cpp
+PDEPS=parser.cpp ast_node.cpp token.cpp tokenizer.cpp \
+	  '../init/init_dispatch.cpp' '../runtime/wrappers.cpp' \
+	  '../init/init_turtle.cpp' '../turtle/turtle.cpp' \
+	  arg.cpp args.cpp dispatch_table.cpp procedure.cpp ../runtime/evaluator.cpp '../rendering/render_turtle.cpp'
+PSRC=parser_test.cpp
 POBJ=parser_test.out
 TZDEPS=tokenizer.cpp token.cpp
 TZSRC=tokenizer_test.cpp
@@ -40,6 +46,9 @@ tokenizer_test:
 
 parser_test:
 	$(CC) $(CFLAGS) $(PSRC) $(PDEPS) $(LFLAGS) -o $(POBJ)
+
+ast_node_test:
+	$(CC) $(CFLAGS) $(ASTSRC) $(ASTDEPS) -o $(ASTOBJ)
 
 clean:
 	rm -f *.out
