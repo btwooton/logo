@@ -1,5 +1,5 @@
-#include <stdio.h>
-#include "init_allegro.h"
+#include <cstdio>
+#include "init_allegro.hpp"
 
 ALLEGRO_DISPLAY *display = NULL;
 ALLEGRO_TIMER *timer = NULL;
