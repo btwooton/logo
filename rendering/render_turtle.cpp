@@ -1,13 +1,13 @@
 #include <allegro5/allegro_primitives.h>
-#include <math.h>
-#include "render_turtle.h"
-#include "../turtle/turtle.h"
+#include <cmath>
+#include "render_turtle.hpp"
+#include "../turtle/turtle.hpp"
 
-void render_turtle(Turtle t) {
+void render_turtle(Turtle& t) {
 
-    int heading = get_heading(t);
-    int x = getx(t);
-    int y = gety(t);
+    int heading = t.get_heading();
+    int x = t.get_x();
+    int y = t.get_y();
 
     int tipx = x + cos(heading*PI/180) * 10;
     int tipy = y + sin(heading*PI/180) * 10;
@@ -26,31 +26,31 @@ void render_turtle(Turtle t) {
 
 }
 
-void rendered_forward(Turtle t, float amt) {
-    if (!isdown(t)) {
+void rendered_forward(Turtle& t, double amt) {
+    if (!t.isdown()) {
         return;
     }
     
-    int oldx = getx(t);
-    int oldy = gety(t);
+    int oldx = t.get_x();
+    int oldy = t.get_y();
 
-    forward(t, amt);
+    t.forward(amt);
 
     ALLEGRO_COLOR color = al_map_rgb(0, 0, 0);
-    al_draw_line(oldx, oldy, getx(t), gety(t), color, 1); 
+    al_draw_line(oldx, oldy, t.get_x(), t.get_y(), color, 1); 
 }
 
-void rendered_backward(Turtle t, float amt) {
-    if (!isdown(t)) { 
+void rendered_backward(Turtle& t, double amt) {
+    if (!t.isdown()) { 
         return;
     }
 
-    int oldx = getx(t);
-    int oldy = gety(t);
+    int oldx = t.get_x();
+    int oldy = t.get_y();
 
-    backward(t, amt);
+    t.backward(amt);
 
     ALLEGRO_COLOR color = al_map_rgb(0, 0, 0);
-    al_draw_line(oldx, oldy, getx(t), gety(t), color, 1);
+    al_draw_line(oldx, oldy, t.get_x(), t.get_y(), color, 1);
 }
 
