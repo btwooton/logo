@@ -32,10 +32,10 @@ class Procedure {
         Args (*callable)(Args);
         std::vector<AstNode> params;
         std::vector<AstNode> body;
-        std::unordered_map<AstNode, AstNode, NodeHasher> bound_arguments;
+        std::unordered_map<std::string, AstNode> bound_arguments;
 
         void bind(Args a);
-        void substitute_bound_arguments(std::vector<AstNode> nodes_lst);
+        std::vector<AstNode> substitute_bound_arguments(std::vector<AstNode> nodes_lst);
 
 };
 
