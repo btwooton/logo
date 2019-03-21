@@ -32,8 +32,6 @@ int main(int argc, char *argv[]) {
 
     Tokenizer tok = Tokenizer();
 
-    
-    
     while (true) {
         al_clear_to_color(al_map_rgb(255, 255, 255));
         render_turtle(__turtle__);
