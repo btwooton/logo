@@ -279,16 +279,3 @@ void AstNode::set_children(std::vector<AstNode> new_children) {
 std::vector<AstNode>& AstNode::get_children() {
     return children;
 }
-
-std::size_t NodeHasher::operator()(const AstNode& key) const {
-    switch (key.get_type()) {
-        case NodeType::AST_NUMBER:
-            return std::hash<double>()(key.get_value<double>());
-        case NodeType::AST_BOOLEAN:
-            return std::hash<bool>()(key.get_value<bool>());
-        default:
-            return std::hash<std::string>()(
-                std::string(key.get_value<const char *>())
-            );
-    }
-}

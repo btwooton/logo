@@ -62,11 +62,4 @@ class AstNode {
         };       
 };
 
-class NodeHasher {
-    public:
-        std::size_t operator()(const AstNode& key) const;
-};
-
-
-
 #endif
