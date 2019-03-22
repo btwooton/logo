@@ -7,6 +7,7 @@
 extern ALLEGRO_DISPLAY *display;
 extern ALLEGRO_TIMER *timer;
 extern ALLEGRO_EVENT_QUEUE *event_queue;
+extern ALLEGRO_BITMAP *draw_surface;
 
 extern int init_allegro(int width, int height, int fps);
 
