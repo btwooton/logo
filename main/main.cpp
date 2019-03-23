@@ -25,7 +25,10 @@ int main(int argc, char *argv[]) {
     init_turtle(400, 400, 0, true);
     init_dispatch_table();
     
+    al_set_target_bitmap(draw_surface);
     al_clear_to_color(al_map_rgb(255, 255, 255));
+    al_set_target_bitmap(al_get_backbuffer(display));
+    al_draw_bitmap(draw_surface, 0, 0, 0);
     render_turtle(__turtle__);
     al_flip_display();
     
@@ -33,18 +36,22 @@ int main(int argc, char *argv[]) {
     Tokenizer tok = Tokenizer();
 
     while (true) {
-        al_clear_to_color(al_map_rgb(255, 255, 255));
-        render_turtle(__turtle__);
+        al_set_target_bitmap(draw_surface);
         std::string input;
         std::getline(std::cin, input);
         std::cout << input << std::endl;
         tok.tokenize(input.c_str());
 
-        AstNode root = parse_expression(tok);
+        while (tok.has_next()) {
+            AstNode root = parse_expression(tok);
+            AstNode result = evaluate(root);
+            std::cout << result << std::endl;
+        }
+        
+        al_set_target_bitmap(al_get_backbuffer(display));
+        al_draw_bitmap(draw_surface, 0, 0, 0);
+        render_turtle(__turtle__);
 
-        AstNode result = evaluate(root);
-
-        std::cout << result << std::endl;
         al_flip_display();
     }
     
