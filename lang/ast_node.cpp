@@ -6,9 +6,7 @@
 #include <vector>
 #include <functional>
 #include <iostream>
-#include "ast_node.hpp"
-
-
+#include "ast_node.hpp" 
 AstNode::AstNode() {
     this->type = NodeType::AST_UNIT;
     new (&string) std::string("()");
@@ -87,6 +85,9 @@ AstNode::AstNode(const AstNode& other) : type(other.type) {
         case NodeType::AST_BOOLEAN:
             new (&boolean) bool(other.boolean);
             break;
+        case NodeType::AST_REPCOUNT:
+            new (&number) double(other.number);
+            break;
         default:
             new (&string) std::string(other.string);
             break;
@@ -104,6 +105,9 @@ AstNode::AstNode(AstNode&& other) {
         case NodeType::AST_BOOLEAN:
             new (&boolean) bool(std::move(other.boolean));
             break;
+        case NodeType::AST_REPCOUNT:
+            new (&number) double(std::move(other.number));
+            break;
         default:
             new (&string) std::string(std::move(other.string));
             break;
@@ -115,6 +119,8 @@ AstNode::~AstNode() {
         case NodeType::AST_NUMBER:
             break;
         case NodeType::AST_BOOLEAN:
+            break;
+        case NodeType::AST_REPCOUNT:
             break;
         default:
             this->string.~basic_string<char>();
@@ -204,6 +210,9 @@ AstNode& AstNode::operator=(const AstNode& other) {
         case NodeType::AST_BOOLEAN:
             this->boolean = other.boolean;
             break;
+        case NodeType::AST_REPCOUNT:
+            this->number = other.number;
+            break;
         default:
             this->string = other.string;
             break;
@@ -222,6 +231,9 @@ AstNode& AstNode::operator=(AstNode&& other) {
             break;
         case NodeType::AST_BOOLEAN:
             this->boolean = std::move(other.boolean);
+            break;
+        case NodeType::AST_REPCOUNT:
+            this->number = std::move(other.number);
             break;
         default:
             this->string = std::move(other.string);
