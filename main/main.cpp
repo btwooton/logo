@@ -40,11 +40,9 @@ int main(int argc, char *argv[]) {
         al_set_target_bitmap(draw_surface);
         std::string input;
         std::getline(std::cin, input);
-        std::cout << input << std::endl;
 
         tok.tokenize(input.c_str());
 
-        std::cout << tok << std::endl;
 
         while (tok.has_next()) {
             AstNode root = parse_expression(tok);

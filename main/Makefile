@@ -6,7 +6,7 @@ DEPS='../turtle/turtle.cpp' '../rendering/render_turtle.cpp' '../init/init_alleg
 	 '../runtime/evaluator.cpp' '../lang/ast_node.cpp' '../lang/parser.cpp' \
 	 '../lang/tokenizer.cpp' '../lang/token.cpp'
 OBJS=main.out
-LFLAGS=-lm -lallegro -lallegro_primitives -lallegro_main
+LFLAGS=-lm -lallegro -lallegro_primitives
 CFLAGS=-std=c++17
 
 main:
