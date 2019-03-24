@@ -54,3 +54,6 @@ void rendered_backward(Turtle& t, double amt) {
     al_draw_line(oldx, oldy, t.get_x(), t.get_y(), color, 1);
 }
 
+void rendered_clean() {
+   al_clear_to_color(al_map_rgb(255, 255, 255)); 
+}

@@ -22,5 +22,6 @@ extern Args (*wdivide)(Args a);
 extern Args (*wequal)(Args a);
 extern Args (*wlessthan)(Args a);
 extern Args (*wgreaterthan)(Args a);
+extern Args (*wclean)(Args a);
 
 #endif

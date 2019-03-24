@@ -85,4 +85,8 @@ void init_dispatch_table() {
         ">",
         Procedure(">", 2, wgreaterthan)
     );
+    __dispatch_table__.add_binding(
+        "clean",
+        Procedure("clean", 0, wclean)
+    );
 }
