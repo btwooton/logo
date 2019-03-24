@@ -23,5 +23,6 @@ extern Args (*wequal)(Args a);
 extern Args (*wlessthan)(Args a);
 extern Args (*wgreaterthan)(Args a);
 extern Args (*wclean)(Args a);
+extern Args (*wsetpensize)(Args a);
 
 #endif

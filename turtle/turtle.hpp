@@ -17,10 +17,12 @@ class Turtle {
         double get_y() const;
         double get_heading() const;
         bool isdown() const;
+        double get_thickness() const;
 
         void set_x(double x);
         void set_y(double y);
         void set_heading(int heading);
+        void set_thickness(double thickness);
         void forward(double amt);
         void backward(double amt);
         void right(int amt);
@@ -32,6 +34,7 @@ class Turtle {
 
         double x;
         double y;
+        double thickness;
         int heading;
         bool pd;
 };

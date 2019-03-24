@@ -89,4 +89,8 @@ void init_dispatch_table() {
         "clean",
         Procedure("clean", 0, wclean)
     );
+    __dispatch_table__.add_binding(
+        "setpensize",
+        Procedure("setpensize", 1, wsetpensize)
+    );
 }

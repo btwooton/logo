@@ -37,7 +37,7 @@ void rendered_forward(Turtle& t, double amt) {
     t.forward(amt);
 
     ALLEGRO_COLOR color = al_map_rgb(0, 0, 0);
-    al_draw_line(oldx, oldy, t.get_x(), t.get_y(), color, 1); 
+    al_draw_line(oldx, oldy, t.get_x(), t.get_y(), color, t.get_thickness()); 
 }
 
 void rendered_backward(Turtle& t, double amt) {
@@ -51,7 +51,7 @@ void rendered_backward(Turtle& t, double amt) {
     t.backward(amt);
 
     ALLEGRO_COLOR color = al_map_rgb(0, 0, 0);
-    al_draw_line(oldx, oldy, t.get_x(), t.get_y(), color, 1);
+    al_draw_line(oldx, oldy, t.get_x(), t.get_y(), color, t.get_thickness());
 }
 
 void rendered_clean() {

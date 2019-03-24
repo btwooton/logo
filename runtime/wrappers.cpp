@@ -235,6 +235,16 @@ Args wclean_impl(Args a) {
     return result;
 }
 
+Args wsetpensize_impl(Args a) {
+    Args result = Args();
+    Arg dummy = Arg(ArgType::ARG_UNIT);
+    result.add_arg(dummy);
+    Arg size = a.get_arg(0);
+    double value = size.get_value<double>();
+    __turtle__.set_thickness(value);
+    return result;
+}
+
 Args (*wforward)(Args a) = &wforward_impl;
 Args (*wbackward)(Args a) = &wbackward_impl;
 Args (*wgetx)(Args a) = &wgetx_impl;
@@ -256,3 +266,4 @@ Args (*wequal)(Args a) = &wequal_impl;
 Args (*wlessthan)(Args a) = &wlessthan_impl;
 Args (*wgreaterthan)(Args a) = &wgreaterthan_impl;
 Args (*wclean)(Args a) = &wclean_impl;
+Args (*wsetpensize)(Args a) = &wsetpensize_impl;

@@ -6,6 +6,7 @@ Turtle::Turtle() {
     this->y = 0.0;
     this->heading = 0;
     this->pd = false;
+    this->thickness = 1;
 }
 
 Turtle::Turtle(double x, double y, int heading, bool pd) {
@@ -13,6 +14,7 @@ Turtle::Turtle(double x, double y, int heading, bool pd) {
     this->y = y;
     this->heading = heading;
     this->pd = pd;
+    this->thickness = 1;
 }
 
 double Turtle::get_x() const {
@@ -27,6 +29,10 @@ double Turtle::get_heading() const {
     return heading;
 }
 
+double Turtle::get_thickness() const {
+    return thickness;
+}
+
 void Turtle::set_x(double x) {
     this->x = x;
 }
@@ -37,6 +43,10 @@ void Turtle::set_y(double y) {
 
 void Turtle::set_heading(int heading) {
     this->heading = heading;
+}
+
+void Turtle::set_thickness(double thickness) {
+    this->thickness = thickness;
 }
 
 void Turtle::forward(double amt) {
