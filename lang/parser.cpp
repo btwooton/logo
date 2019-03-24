@@ -1,12 +1,14 @@
 #include <cassert>
 #include <cstring>
 #include <cstdio>
+#include <iostream>
 #include "procedure.hpp"
 #include "dispatch_table.hpp"
 #include "../init/init_dispatch.hpp"
 #include "parser.hpp"
 
 AstNode parse_expression(Tokenizer& tok) {
+
     Token t = tok.peek_next();
 
     if (t.get_type() == TokenType::NUMBER) {
@@ -40,12 +42,14 @@ AstNode parse_expression(Tokenizer& tok) {
 }
 
 AstNode parse_number(Tokenizer& tok) {
+
     Token number_token = tok.get_next();
     AstNode result = AstNode(atof(number_token.get_contents()));
     return result;
 }
 
 AstNode parse_boolean(Tokenizer& tok) {
+
     Token bool_token = tok.get_next();
     const char *contents = bool_token.get_contents();
     if (strcmp(contents, "false") == 0) {
@@ -56,6 +60,7 @@ AstNode parse_boolean(Tokenizer& tok) {
 }
 
 AstNode parse_repeat(Tokenizer& tok) {
+
     Token repeat_token = tok.get_next();
     const char *contents = repeat_token.get_contents();
     AstNode repeat_node = AstNode(contents);
@@ -67,6 +72,7 @@ AstNode parse_repeat(Tokenizer& tok) {
 }
 
 AstNode parse_bracketed(Tokenizer& tok) {
+
     Token open_square = tok.get_next();
     assert(open_square.get_type() == TokenType::OPEN_SQUARE);
     int num_tokens = 0;
@@ -114,12 +120,14 @@ AstNode parse_bracketed(Tokenizer& tok) {
 }
 
 AstNode parse_identifier(Tokenizer& tok) {
+
     Token identifier = tok.get_next();
     AstNode result = AstNode(identifier.get_contents());
     return result;
 }
 
 AstNode parse_funcall(Tokenizer& tok) {
+
     Token fname = tok.get_next();
     assert(__dispatch_table__.has_binding(fname.get_contents()));
 
@@ -135,12 +143,33 @@ AstNode parse_funcall(Tokenizer& tok) {
 }
 
 AstNode parse_fundef(Tokenizer& tok) {
+
     Token to = tok.get_next();
     assert(to.get_type() == TokenType::TO);
 
     Token fname = tok.get_next();
 
     AstNode func_node = AstNode(fname.get_contents(), NodeType::AST_FUNC);
+
+    // count the parameter tokens
+    int num_params = 0;
+
+    while (tok.peek_next().get_type() == TokenType::PARAMETER) {
+        tok.get_next();
+        num_params++;
+    }
+
+    for (int i = 0; i < num_params; i++) {
+        tok.unget();
+    }
+
+    // add a dummy binding to the dispatch table so that
+    // we can parse recursive function definitions
+    __dispatch_table__.add_binding(
+            fname.get_contents(),
+            Procedure(fname.get_contents(), num_params, 
+            std::vector<AstNode>(), std::vector<AstNode>())
+    ); 
 
     while (tok.peek_next().get_type() != TokenType::END) {
         func_node.add_child(parse_expression(tok)); 

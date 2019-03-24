@@ -1,6 +1,7 @@
 #include <cmath>
 #include <cstdio>
 #include <string>
+#include <stdexcept>
 #include "../turtle/turtle.hpp"
 #include "../init/init_allegro.hpp"
 #include "../init/init_turtle.hpp"
@@ -40,7 +41,10 @@ int main(int argc, char *argv[]) {
         std::string input;
         std::getline(std::cin, input);
         std::cout << input << std::endl;
+
         tok.tokenize(input.c_str());
+
+        std::cout << tok << std::endl;
 
         while (tok.has_next()) {
             AstNode root = parse_expression(tok);

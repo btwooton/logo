@@ -78,6 +78,7 @@ AstNode evaluate_fundef(const AstNode& fundef) {
     std::vector<AstNode> params;
     std::vector<AstNode> body;
 
+
     for (int i = 0; i < fundef.get_num_children(); i++) {
         AstNode child = fundef.get_child(i);
        if (child.get_type() == NodeType::AST_PARAMETER) {

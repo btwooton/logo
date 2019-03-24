@@ -64,7 +64,7 @@ bool Tokenizer::has_next() const {
 }
 
 std::ostream& operator<<(std::ostream& out, const Tokenizer& tok) {
-    for (int i = 0; i < tok.tokens.size(); i++) {
+    for (int i = tok.current_token; i < tok.tokens.size(); i++) {
         out << tok.tokens[i].get_contents() << " ";
     }
     out << "\n";
