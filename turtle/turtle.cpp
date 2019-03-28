@@ -64,11 +64,11 @@ void Turtle::backward(double amt) {
 }
 
 void Turtle::right(int amt) {
-    heading = (heading - amt + 360) % 360;
+    heading = (heading + amt) % 360;
 }
 
 void Turtle::left(int amt) {
-    heading = (heading + amt) % 360;
+    heading = (heading - amt + 360) % 360;
 }
 
 void Turtle::penup() {
