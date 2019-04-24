@@ -51,8 +51,10 @@ class AstNode {
         bool operator==(const AstNode& other) const;
         bool operator!=(const AstNode& other) const;
         friend std::ostream& operator<<(std::ostream& out, const AstNode& node);
+        friend std::ostream& output_recursive(std::ostream &out, const AstNode& node, std::string tab_string);
 
     private:
+
         NodeType type;
         std::vector<AstNode> children;
         union {

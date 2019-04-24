@@ -267,21 +267,26 @@ bool AstNode::operator!=(const AstNode& other) const {
     return !this->operator==(other);
 }
 
-std::ostream& operator<<(std::ostream& out, const AstNode& node) {
-    switch (node.type) {
+std::ostream& output_recursive(std::ostream& out, const AstNode& node, std::string tab_string) {
+  switch (node.type) {
         case NodeType::AST_NUMBER:
-            out << node.get_value<double>() << "\n\t";
+            out << tab_string << node.get_value<double>() << "\n";
             break;
         case NodeType::AST_BOOLEAN:
-            out << node.get_value<bool>() << "\n\t";
+            out << tab_string << node.get_value<bool>() << "\n";
             break;
         default:
-            out << node.get_value<const char *>() << "\n\t";
+            out << tab_string << node.get_value<const char *>() << "\n";
     }
+    std::string next_tab = tab_string + "\t";
     for (int i = 0; i < node.children.size(); i++) {
-        operator<<(out, node.children[i]);
+        output_recursive(out, node.children[i], next_tab);
     }
     return out;
+}
+
+std::ostream& operator<<(std::ostream& out, const AstNode& node) {
+  return output_recursive(out, node, "");
 }
 
 void AstNode::set_children(std::vector<AstNode> new_children) {
