@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdexcept>
+#include <iostream>
 #include "token.hpp"
 #include "tokenizer.hpp"
 
@@ -19,17 +21,20 @@ void test_tokenizer() {
     char *string = (char *)malloc(sizeof(char) * (strlen("Hello World!") + 1));
     strcpy(string, "Hello World!");
     tok.tokenize(string);
-
-    // Then: You should be able to get the appropriate tokens back
-    Token t1 = tok.get_next();
-    Token t2 = tok.get_next();
-
-    ASSERT(t1.get_type() == TokenType::OTHER);
-    ASSERT(t2.get_type() == TokenType::OTHER);
-    ASSERT(strcmp(t1.get_contents(), "Hello") == 0);
-    ASSERT(strcmp(t2.get_contents(), "World!") == 0);
-    free(string);
-    SUCCESS();
+    try {
+        // Then: You should be able to get the appropriate tokens back
+        Token t1 = tok.get_next();
+        Token t2 = tok.get_next();
+        ASSERT(t1.get_type() == TokenType::OTHER);
+        ASSERT(t2.get_type() == TokenType::OTHER);
+        ASSERT(strcmp(t1.get_contents(), "Hello") == 0);
+        ASSERT(strcmp(t2.get_contents(), "World!") == 0);
+        free(string);
+        SUCCESS();
+    } catch (std::out_of_range &e) {
+        // Catch the exception if there are no more tokens
+        ASSERT(false);
+    }
 }
 
 void test_tokenizer_complex() {
@@ -111,10 +116,34 @@ void test_tokenizer_binary() {
 
 }
 
+void test_tokenizer_weird_ws() {
+    // Given: You have the following expression string with weird whitespace
+    const char *expression = "repeat 4  [forward 5 * repcount     right 90]    ";
+
+    // When: You tokenize the string
+    Tokenizer tok = Tokenizer();
+    tok.tokenize(expression);
+    // Then: You should have the correct tokens
+    Token t = tok.get_next();
+    ASSERT(strcmp(t.get_contents(), "repeat") == 0);
+    ASSERT(strcmp(tok.get_next().get_contents(), "4") == 0);
+    ASSERT(strcmp(tok.get_next().get_contents(), "[") == 0);
+    ASSERT(strcmp(tok.get_next().get_contents(), "forward") == 0);
+    ASSERT(strcmp(tok.get_next().get_contents(), "*") == 0);
+    ASSERT(strcmp(tok.get_next().get_contents(), "5") == 0);
+    ASSERT(strcmp(tok.get_next().get_contents(), "repcount") == 0);
+    ASSERT(strcmp(tok.get_next().get_contents(), "right") == 0);
+    ASSERT(strcmp(tok.get_next().get_contents(), "90") == 0);
+    ASSERT(strcmp(tok.get_next().get_contents(), "]") == 0);
+    SUCCESS();
+
+}
+
 int main(int argc, char *argv[]) {
     test_tokenizer();
     test_tokenizer_complex();
     test_tokenizer_unget();
     test_tokenizer_binary();
+    test_tokenizer_weird_ws();
     return 0;
 }

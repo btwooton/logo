@@ -1,6 +1,6 @@
 CC=g++
-CFLAGS=-std=c++17
-LFLAGS=-lm -lallegro -lallegro_primitives
+CFLAGS=-std=c++17 -I/opt/homebrew/include
+LFLAGS= -L/opt/homebrew/lib -lm -lallegro -lallegro_primitives
 TDEPS=token.cpp
 TOBJ=token_test.out
 TSRC=token_test.cpp

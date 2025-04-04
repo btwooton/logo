@@ -4,6 +4,7 @@
 #include "args.hpp"
 #include "procedure.hpp"
 #include "dispatch_table.hpp"
+#include <stdio.h>
 
 unsigned int DispatchTable::get_size() const {
     return dt.size();

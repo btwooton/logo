@@ -129,7 +129,10 @@ AstNode parse_identifier(Tokenizer& tok) {
 AstNode parse_funcall(Tokenizer& tok) {
 
     Token fname = tok.get_next();
-    assert(__dispatch_table__.has_binding(fname.get_contents()));
+    if (!__dispatch_table__.has_binding(fname.get_contents())) {
+        std::cerr << "Error: function " << fname.get_contents() << " not defined" << std::endl;
+        exit(1);
+    }
 
     Procedure p = __dispatch_table__.get_bound_procedure(fname.get_contents());
     unsigned int arity = p.get_arity();

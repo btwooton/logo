@@ -6,8 +6,8 @@ DEPS='../turtle/turtle.cpp' '../rendering/render_turtle.cpp' '../init/init_alleg
 	 '../runtime/evaluator.cpp' '../lang/ast_node.cpp' '../lang/parser.cpp' \
 	 '../lang/tokenizer.cpp' '../lang/token.cpp'
 OBJS=main.out
-LFLAGS=-lm -lallegro -lallegro_primitives
-CFLAGS=-std=c++17
+LFLAGS= -L/opt/homebrew/lib -lm -lallegro -lallegro_primitives -lallegro_main
+CFLAGS=-std=c++17 -I/opt/homebrew/include
 
 main:
 		$(CC) $(CFLAGS) $(SRC) $(DEPS) $(LFLAGS) -o $(OBJS)

@@ -1,10 +1,10 @@
-#include <cassert>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <string>
 #include <vector>
 #include <functional>
+#include <stdexcept>
 #include <iostream>
 #include "ast_node.hpp" 
 AstNode::AstNode() {
@@ -133,43 +133,46 @@ NodeType AstNode::get_type() const {
 }
 
 template <> double AstNode::get_value() const {
-    assert(
-        type == NodeType::AST_NUMBER ||
-        type == NodeType::AST_REPCOUNT
-    );
+    if (type != NodeType::AST_NUMBER || type != NodeType::AST_REPCOUNT) {
+        throw std::runtime_error("Invalid type for double get_value()");
+    }
     return number;
 }
 
 template <> bool AstNode::get_value() const {
-    assert(type == NodeType::AST_BOOLEAN);
+    if (type != NodeType::AST_BOOLEAN) {
+        throw std::runtime_error("Invalid type for bool get_value()");
+    }
     return boolean;
 }
 
 template <> const char *AstNode::get_value() const {
-    assert(
-        type != NodeType::AST_NUMBER &&
-        type != NodeType::AST_BOOLEAN &&
-        type != NodeType::AST_REPCOUNT
-    );
+    if (type == NodeType::AST_BOOLEAN || type == NodeType::AST_NUMBER || type == NodeType::AST_REPCOUNT) {
+        throw std::runtime_error("Invalid type for string get_value()");
+    }
     return string.c_str();
 }
 
 template <> void AstNode::set_value(double new_value) {
-    assert(type == NodeType::AST_NUMBER || type == NodeType::AST_REPCOUNT);
+    if (type != NodeType::AST_NUMBER || type != NodeType::AST_REPCOUNT) {
+        throw std::runtime_error("Invalid type for set_value(double)");
+    }
     number = new_value;
 }
 
 template <> void AstNode::set_value(bool new_value) {
-    assert(type == NodeType::AST_BOOLEAN);
+    if (type != NodeType::AST_BOOLEAN) {
+        throw std::runtime_error("Invalid type for set_value(bool)");
+    }
     boolean = new_value;
 }
 
 template <> void AstNode::set_value(const char *new_value) {
-    assert(
-        type != NodeType::AST_BOOLEAN && 
-        type != NodeType::AST_NUMBER &&
-        type != NodeType::AST_REPCOUNT
-    );
+    if (type == NodeType::AST_BOOLEAN || 
+        type == NodeType::AST_NUMBER || 
+        type == NodeType::AST_REPCOUNT) {
+        throw std::runtime_error("Invalid type for set_value(const char *)");
+    }
     string = std::string(new_value);
 }
 
@@ -178,12 +181,16 @@ void AstNode::add_child(AstNode child) {
 }
 
 AstNode AstNode::get_child(unsigned int index) const {
-    assert(index < children.size());
+    if (index >= children.size()) {
+        throw std::out_of_range("Index out of range");
+    }
     return children[index];
 }
 
 AstNode AstNode::set_child(AstNode child, unsigned int index) {
-    assert(index < children.size());
+    if (index >= children.size()) {
+        throw std::out_of_range("Index out of range");
+    }
     AstNode result = children[index];
     children[index] = child;
     return result;
