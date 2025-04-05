@@ -7,6 +7,43 @@
 #include <stdexcept>
 #include <iostream>
 #include "ast_node.hpp" 
+
+std::string node_type_to_string(NodeType type) {
+    switch (type) {
+        case NodeType::AST_UNIT:
+            return "AST_UNIT";
+        case NodeType::AST_NUMBER:
+            return "AST_NUMBER";
+        case NodeType::AST_BOOLEAN:
+            return "AST_BOOLEAN";
+        case NodeType::AST_STRING:
+            return "AST_STRING";
+        case NodeType::AST_IDENTIFIER:
+            return "AST_IDENTIFIER";
+        case NodeType::AST_PARAMETER:
+            return "AST_PARAMETER";
+        case NodeType::AST_REPEAT:
+            return "AST_REPEAT";
+        case NodeType::AST_FUNCALL:
+            return "AST_FUNCALL";
+        case NodeType::AST_FUNC:
+            return "AST_FUNC";
+        case NodeType::AST_IF:
+            return "AST_IF";
+        case NodeType::AST_IFELSE:
+            return "AST_IFELSE";
+        case NodeType::AST_OUTPUT:
+            return "AST_OUTPUT";
+        case NodeType::AST_STOP:
+            return "AST_STOP";
+        case NodeType::AST_REPCOUNT:
+            return "AST_REPCOUNT";
+        case NodeType::AST_BRACKETED:
+            return "AST_BRACKETED";
+    }
+    return "";
+}
+
 AstNode::AstNode() {
     this->type = NodeType::AST_UNIT;
     new (&string) std::string("()");
@@ -133,29 +170,29 @@ NodeType AstNode::get_type() const {
 }
 
 template <> double AstNode::get_value() const {
-    if (type != NodeType::AST_NUMBER || type != NodeType::AST_REPCOUNT) {
-        throw std::runtime_error("Invalid type for double get_value()");
+    if (type != NodeType::AST_NUMBER && type != NodeType::AST_REPCOUNT) {
+        throw std::runtime_error("Invalid type for double get_value(), actual type: " + node_type_to_string(type));
     }
     return number;
 }
 
 template <> bool AstNode::get_value() const {
     if (type != NodeType::AST_BOOLEAN) {
-        throw std::runtime_error("Invalid type for bool get_value()");
+        throw std::runtime_error("Invalid type for bool get_value(), actual type: " + node_type_to_string(type));
     }
     return boolean;
 }
 
 template <> const char *AstNode::get_value() const {
     if (type == NodeType::AST_BOOLEAN || type == NodeType::AST_NUMBER || type == NodeType::AST_REPCOUNT) {
-        throw std::runtime_error("Invalid type for string get_value()");
+        throw std::runtime_error("Invalid type for string get_value(), actual type: " + node_type_to_string(type));
     }
     return string.c_str();
 }
 
 template <> void AstNode::set_value(double new_value) {
-    if (type != NodeType::AST_NUMBER || type != NodeType::AST_REPCOUNT) {
-        throw std::runtime_error("Invalid type for set_value(double)");
+    if (type != NodeType::AST_NUMBER && type != NodeType::AST_REPCOUNT) {
+        throw std::runtime_error("Invalid type for set_value(double), actual type: " + node_type_to_string(type));
     }
     number = new_value;
 }

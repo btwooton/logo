@@ -1,4 +1,4 @@
-#include <cassert>
+#include <stdexcept>
 #include <cstring>
 #include <cstdio>
 #include <iostream>
@@ -74,7 +74,9 @@ AstNode parse_repeat(Tokenizer& tok) {
 AstNode parse_bracketed(Tokenizer& tok) {
 
     Token open_square = tok.get_next();
-    assert(open_square.get_type() == TokenType::OPEN_SQUARE);
+    if (open_square.get_type() != TokenType::OPEN_SQUARE) {
+        throw std::runtime_error("Expected OPEN_SQUARE token in AstNode parse_bracketed()");
+    }
     int num_tokens = 0;
     int num_open = 1;
     while (num_open > 0) {
@@ -91,7 +93,9 @@ AstNode parse_bracketed(Tokenizer& tok) {
     }
     tok.unget();
     Token closed_square = tok.get_next();
-    assert(closed_square.get_type() == TokenType::CLOSED_SQUARE);
+    if (closed_square.get_type() != TokenType::CLOSED_SQUARE) {
+        throw std::runtime_error("Expected CLOSED_SQUARE token in AstNode parse_bracketed()");
+    }
 
     for (int i = 0; i < num_tokens; i++) {
         tok.unget();
@@ -148,7 +152,9 @@ AstNode parse_funcall(Tokenizer& tok) {
 AstNode parse_fundef(Tokenizer& tok) {
 
     Token to = tok.get_next();
-    assert(to.get_type() == TokenType::TO);
+    if (to.get_type() != TokenType::TO) {
+        throw std::runtime_error("Expected TO token in AstNode parse_fundef()");
+    }
 
     Token fname = tok.get_next();
 
@@ -186,7 +192,9 @@ AstNode parse_fundef(Tokenizer& tok) {
 
 AstNode parse_parameter(Tokenizer& tok) {
     Token param_token = tok.get_next();
-    assert(param_token.get_type() == TokenType::PARAMETER);
+    if (param_token.get_type() != TokenType::PARAMETER) {
+        throw std::runtime_error("Expected PARAMETER token in AstNode parse_parameter()");
+    }
     return AstNode(param_token.get_contents());
 }
 
@@ -220,7 +228,9 @@ AstNode parse_ifelse(Tokenizer& tok) {
 
 AstNode parse_output(Tokenizer& tok) {
     Token output_token = tok.get_next();
-    assert(output_token.get_type() == TokenType::OUTPUT);
+    if (output_token.get_type() != TokenType::OUTPUT) {
+        throw std::runtime_error("Expected OUTPUT token in AstNode parse_output()");
+    }
     
     AstNode output_node = AstNode(output_token.get_contents());
     AstNode out_val = parse_expression(tok);
@@ -232,7 +242,9 @@ AstNode parse_output(Tokenizer& tok) {
 
 AstNode parse_stop(Tokenizer& tok) {
     Token stop_token = tok.get_next();
-    assert(stop_token.get_type() == TokenType::STOP);
+    if (stop_token.get_type() != TokenType::STOP) {
+        throw std::runtime_error("Expected STOP token in AstNode parse_stop()");
+    }
 
     AstNode stop_node = AstNode(stop_token.get_contents());
     return stop_node;
@@ -240,7 +252,9 @@ AstNode parse_stop(Tokenizer& tok) {
 
 AstNode parse_repcount(Tokenizer& tok) {
     Token repcount_token = tok.get_next();
-    assert(repcount_token.get_type() == TokenType::REPCOUNT);
+    if (repcount_token.get_type() != TokenType::REPCOUNT) {
+        throw std::runtime_error("Expected REPCOUNT token in AstNode parse_repcount()");
+    }
 
     AstNode repcount_node = AstNode(NodeType::AST_REPCOUNT);
     return repcount_node;

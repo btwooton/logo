@@ -181,6 +181,83 @@ void test_parse_if() {
     SUCCESS();
 }
 
+void test_parse_weird_func() {
+
+    init_turtle(500, 500, 90, true);
+    init_dispatch_table();
+    // Given: You have the following function definition expression
+    const char *expression = "to tree :size ifelse :size < 100 [ forward :size stop ] \
+                              [ forward 100 tree :size - 50 ] end";
+
+
+    // When: You parse the expression
+    Tokenizer tok = Tokenizer();
+    tok.tokenize(expression);
+
+    // Then: You should get back the root of the appropriate AST
+    AstNode func_node = parse_expression(tok);
+    ASSERT(func_node.get_type() == NodeType::AST_FUNC);
+    ASSERT(func_node.get_num_children() == 2);
+
+    AstNode param_node = func_node.get_child(0);
+    ASSERT(param_node.get_type() == NodeType::AST_PARAMETER);
+
+    AstNode body_node = func_node.get_child(1);
+    ASSERT(body_node.get_type() == NodeType::AST_IFELSE);
+    ASSERT(body_node.get_num_children() == 3);
+
+    AstNode condition_node = body_node.get_child(0);
+    ASSERT(condition_node.get_type() == NodeType::AST_FUNCALL);
+    ASSERT(strcmp(condition_node.get_value<const char*>(), "<") == 0);
+
+    AstNode param_node1 = condition_node.get_child(0);
+    ASSERT(param_node1.get_type() == NodeType::AST_PARAMETER);
+    ASSERT(strcmp(param_node1.get_value<const char*>(), ":size") == 0);
+
+    AstNode number_node = condition_node.get_child(1);
+    ASSERT(number_node.get_type() == NodeType::AST_NUMBER);
+    ASSERT(number_node.get_value<double>() == 100.0);
+
+    AstNode bracketed1 = body_node.get_child(1);
+    AstNode bracketed2 = body_node.get_child(2);
+
+    AstNode funcall1 = bracketed1.get_child(0);
+    ASSERT(funcall1.get_type() == NodeType::AST_FUNCALL);
+    ASSERT(strcmp(funcall1.get_value<const char*>(), "forward") == 0);
+    ASSERT(funcall1.get_num_children() == 1);
+    AstNode param_node2 = funcall1.get_child(0);
+    ASSERT(param_node2.get_type() == NodeType::AST_PARAMETER);
+    ASSERT(strcmp(param_node2.get_value<const char*>(), ":size") == 0);
+
+    AstNode stop = bracketed1.get_child(1);
+    ASSERT(stop.get_type() == NodeType::AST_STOP);
+    ASSERT(stop.get_num_children() == 0);
+
+    AstNode funcall2 = bracketed2.get_child(0);
+    ASSERT(funcall2.get_type() == NodeType::AST_FUNCALL);
+    ASSERT(strcmp(funcall2.get_value<const char*>(), "forward") == 0);
+    ASSERT(funcall2.get_num_children() == 1);
+    AstNode number_node2 = funcall2.get_child(0);
+    ASSERT(number_node2.get_type() == NodeType::AST_NUMBER);
+    ASSERT(number_node2.get_value<double>() == 100.0);
+
+    AstNode recursive_call = bracketed2.get_child(1);
+    ASSERT(recursive_call.get_type() == NodeType::AST_FUNCALL);
+    ASSERT(strcmp(recursive_call.get_value<const char*>(), "tree") == 0);
+
+    AstNode recursive_argument = recursive_call.get_child(0);
+    ASSERT(recursive_argument.get_type() == NodeType::AST_FUNCALL);
+    ASSERT(strcmp(recursive_argument.get_value<const char*>(), "-") == 0);
+    AstNode param_node3 = recursive_argument.get_child(0); 
+    ASSERT(param_node3.get_type() == NodeType::AST_PARAMETER);
+    ASSERT(strcmp(param_node3.get_value<const char*>(), ":size") == 0);
+    AstNode number_node3 = recursive_argument.get_child(1);
+    ASSERT(number_node3.get_type() == NodeType::AST_NUMBER);
+    ASSERT(number_node3.get_value<double>() == 50.0);
+
+    SUCCESS();
+}
+
 
 
 
@@ -189,5 +266,6 @@ int main(int argc, char *argv[]) {
     test_parse_nested_repeat();
     test_parse_fundef();
     test_parse_if();
+    test_parse_weird_func();
     return 0;
 }
